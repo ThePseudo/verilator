@@ -489,8 +489,7 @@ public:
     void fullQData(uint32_t* oldp, QData newval, int bits);
     void fullWData(uint32_t* oldp, const WData* newvalp, int bits);
     void fullDouble(uint32_t* oldp, double newval);
-    void fullEvent(uint32_t* oldp, const VlEventBase* newvalp);
-    void fullEventTriggered(uint32_t* oldp);
+    void fullEvent(uint32_t* oldp, const VlEvent* newval);
 
     // In non-offload mode, these are called directly by the trace callbacks,
     // and are called chg*. In offload mode, they are called by the worker
@@ -527,8 +526,8 @@ public:
             }
         }
     }
-    VL_ATTR_ALWINLINE void chgEvent(uint32_t* oldp, const VlEventBase* newvalp) {
-        if (newvalp->isTriggered()) fullEvent(oldp, newvalp);
+    VL_ATTR_ALWINLINE void chgEvent(uint32_t* oldp, const VlEvent* newval) {
+        fullEvent(oldp, newval);
     }
     VL_ATTR_ALWINLINE void chgEventTriggered(uint32_t* oldp) { fullEventTriggered(oldp); }
     VL_ATTR_ALWINLINE void chgDouble(uint32_t* oldp, double newval) {
@@ -609,10 +608,7 @@ public:
         m_offloadBufferWritep += 4;
         VL_DEBUG_IF(assert(m_offloadBufferWritep <= m_offloadBufferEndp););
     }
-    void chgEvent(uint32_t code, const VlEventBase* newvalp) {
-        if (newvalp->isTriggered()) chgEventTriggered(code);
-    }
-    void chgEventTriggered(uint32_t code) {
+    void chgEvent(uint32_t code, const VlEvent* newval) {
         m_offloadBufferWritep[0] = VerilatedTraceOffloadCommand::CHG_EVENT;
         m_offloadBufferWritep[1] = code;
         m_offloadBufferWritep += 2;
