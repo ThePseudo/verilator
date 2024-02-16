@@ -135,10 +135,10 @@ class DelayedVisitor final : public VNVisitor {
 
     // STATE - across all visitors
     std::unordered_map<const AstVarScope*, int> m_scopeVecMap;  // Next var number for each scope
-    std::set<AstSenTree*> m_timingDomains;  // Timing resume domains
-    // Table of new var names created under module
-    std::map<const std::pair<AstNodeModule*, std::string>, AstVar*> m_modVarMap;
-    AstNode* m_insertionPointp = nullptr;  // Where to insert new statements
+    std::unordered_set<AstSenTree*> m_timingDomains;  // Timing resume domains
+    using VarMap = std::map<const std::pair<AstNodeModule*, std::string>, AstVar*>;
+    VarMap m_modVarMap;  // Table of new var names created under module
+    VDouble0 m_statSharedSet;  // Statistic tracking
 
     // STATE - for current visit position (use VL_RESTORER)
     AstActive* m_activep = nullptr;  // Current activate

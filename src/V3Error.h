@@ -33,6 +33,7 @@
 #include <map>
 #include <set>
 #include <sstream>
+#include <unordered_set>
 
 //######################################################################
 
@@ -305,7 +306,7 @@ class V3ErrorGuarded final {
     friend class V3Error;
 
 public:
-    using MessagesSet = std::set<std::string>;
+    using MessagesSet = std::unordered_set<std::string>;
     using ErrorExitCb = void (*)(void);
 
 private:
