@@ -45,8 +45,4 @@ verilator_coverage_bin*
 /.idea/
 /cmake-build-*/
 /test_regress/snapshot/
-xmverilog.*
-xrun.history
-
-# Normal CMake build directory
-/build
+*.txt
