@@ -2135,10 +2135,9 @@ class LinkDotResolveVisitor final : public VNVisitor {
     bool m_inSens = false;  // True if in senitem
     bool m_inWith = false;  // True if in with
     std::map<std::string, AstNode*> m_ifClassImpNames;  // Names imported from interface class
-    std::unordered_set<AstClass*>
-        m_extendsParam;  // Classes that have a parameterized super class
-                         // (except the default instances)
-                         // They are added to the set only in linkDotPrimary.
+    std::set<AstClass*> m_extendsParam;  // Classes that have a parameterized super class
+                                         // (except the default instances)
+                                         // They are added to the set only in linkDotPrimary.
     bool m_insideClassExtParam = false;  // Inside a class from m_extendsParam
     bool m_explicitSuperNew = false;  // Hit a "super.new" call inside a "new" function
     std::map<AstNode*, AstPin*> m_usedPins;  // Pin used in this cell, map to duplicate
