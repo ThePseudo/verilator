@@ -121,6 +121,9 @@ public:
     void clearUser() {
         for (const auto& testp : m_tests) testp->user(0);
     }
+
+    size_t size() const { return m_tests.size(); }
+    VlcTest* operator[](const size_t index) { return m_tests[index]; }
 };
 
 //######################################################################

@@ -144,27 +144,25 @@ void VlcTop::writeInfo(const string& filename) {
 
 //********************************************************************
 
-struct CmpComputrons final {
-    bool operator()(const VlcTest* lhsp, const VlcTest* rhsp) const {
-        if (lhsp->computrons() != rhsp->computrons()) {
-            return lhsp->computrons() < rhsp->computrons();
-        }
-        return lhsp->bucketsCovered() > rhsp->bucketsCovered();
-    }
-};
-
 void VlcTop::rank() {
     UINFO(2, "rank...\n");
     uint64_t nextrank = 1;
 
     // Sort by computrons, so fast tests get selected first
     std::vector<VlcTest*> bytime;
-    for (const auto& testp : m_tests) {
-        if (testp->bucketsCovered()) {  // else no points, so can't help us
-            bytime.push_back(testp);
+    for (size_t i = 0; i < m_tests.size(); i++) {
+        if (m_tests[i]->bucketsCovered()) {  // else no points, so can't help us
+            bytime.push_back(m_tests[i]);
         }
     }
-    sort(bytime.begin(), bytime.end(), CmpComputrons());  // Sort the vector
+
+    const auto computronComparator = [](const VlcTest* lhsp, const VlcTest* rhsp) {
+        if (lhsp->computrons() != rhsp->computrons()) {
+            return lhsp->computrons() < rhsp->computrons();
+        }
+        return lhsp->bucketsCovered() > rhsp->bucketsCovered();
+    };
+    sort(bytime.begin(), bytime.end(), computronComparator);  // Sort the vector
 
     VlcBuckets remaining;
     for (const auto& i : m_points) {
