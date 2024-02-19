@@ -152,7 +152,7 @@ void VlcTop::rank() {
     std::vector<VlcTest*> bytime;
     for (size_t i = 0; i < m_tests.size(); i++) {
         if (m_tests[i].bucketsCovered()) {  // else no points, so can't help us
-            bytime.push_back(m_tests[i]);
+            bytime.push_back(&m_tests[i]);
         }
     }
 
