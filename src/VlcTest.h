@@ -100,6 +100,7 @@ public:
     using iterator = ByName::iterator;
     ByName::iterator begin() { return m_tests.begin(); }
     ByName::iterator end() { return m_tests.end(); }
+    void push(const VlcTest& test) { m_tests.emplace_back(test); }
 
     // CONSTRUCTORS
     VlcTests() = default;

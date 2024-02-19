@@ -33,14 +33,15 @@
 void VlcTop::readCoverage(const string& filename, bool nonfatal) {
     UINFO(2, "readCoverage " << filename << endl);
 
-    std::ifstream is{filename.c_str()};
+    std::ifstream is(filename);
     if (!is) {
         if (!nonfatal) v3fatal("Can't read " << filename);
         return;
     }
 
     // Testrun and computrons argument unsupported as yet
-    VlcTest* const testp = tests().newTest(filename, 0, 0);
+    //VlcTest* const testp = tests().newTest(filename, 0, 0);
+    VlcTest test(filename, 0, 0);
 
     while (!is.eof()) {
         const string line = V3Os::getline(is);
@@ -58,11 +59,12 @@ void VlcTop::readCoverage(const string& filename, bool nonfatal) {
             if (opt.rank()) {  // Only if ranking - uses a lot of memory
                 if (hits >= VlcBuckets::sufficient()) {
                     points().pointNumber(pointnum).testsCoveringInc();
-                    testp->buckets().addData(pointnum, hits);
+                    test.buckets().addData(pointnum, hits);
                 }
             }
         }
     }
+    tests().push(test);
 }
 
 void VlcTop::writeCoverage(const string& filename) {
@@ -152,7 +154,7 @@ void VlcTop::rank() {
     std::vector<VlcTest*> bytime;
     for (size_t i = 0; i < m_tests.size(); i++) {
         if (m_tests[i].bucketsCovered()) {  // else no points, so can't help us
-            bytime.push_back(&m_tests[i]);
+            bytime.emplace_back(&m_tests[i]);
         }
     }
 
