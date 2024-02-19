@@ -66,7 +66,7 @@ public:
         // std::cout<<"  Testrun, Computrons,";  // Currently not loaded
         std::cout << "  Covered,     Rank,  RankPts,  Filename\n";
     }
-    void dump(bool bucketsToo) {
+    void dump(bool bucketsToo) const {
         if (testrun() || computrons() != 0.0) {  // currently unused // LCOV_EXCL_LINE
             std::cout << "  " << std::setw(8) << std::setfill('0') << testrun()  // LCOV_EXCL_LINE
                       << ",  " << std::setw(7) << std::setfill(' ')
@@ -87,7 +87,7 @@ public:
 class VlcTests final {
 public:
     // TYPES
-    using ByName = std::vector<VlcTest*>;
+    using ByName = std::vector<VlcTest>;
 
 private:
     // MEMBERS
@@ -104,26 +104,26 @@ public:
     // CONSTRUCTORS
     VlcTests() = default;
     ~VlcTests() {
-        for (auto it = begin(); it != end(); ++it) { VL_DO_CLEAR(delete *it, *it = nullptr); }
+        //for (auto it = begin(); it != end(); ++it) { VL_DO_CLEAR(delete *it, *it = nullptr); }
     }
 
     // METHODS
     void dump(bool bucketsToo) {
         UINFO(2, "dumpTests...\n");
         VlcTest::dumpHeader();
-        for (const auto& testp : m_tests) testp->dump(bucketsToo);
+        for (const auto& test : m_tests) test.dump(bucketsToo);
     }
     VlcTest* newTest(const string& name, uint64_t testrun, double comp) {
-        VlcTest* const testp = new VlcTest{name, testrun, comp};
-        m_tests.push_back(testp);
-        return testp;
+        VlcTest const test = VlcTest{name, testrun, comp};
+        m_tests.emplace_back(test);
+        return &m_tests.back();
     }
     void clearUser() {
-        for (const auto& testp : m_tests) testp->user(0);
+        for (auto& test : m_tests) test.user(0);
     }
 
     size_t size() const { return m_tests.size(); }
-    VlcTest* operator[](const size_t index) { return m_tests[index]; }
+    VlcTest& operator[](const size_t index) { return m_tests[index]; }
 };
 
 //######################################################################
